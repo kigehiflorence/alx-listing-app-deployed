@@ -1,3 +1,4 @@
+import ReviewSection from "@/components/property/ReviewSection";
 interface Property {
   id: number;
   title: string;
@@ -24,5 +25,6 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
       <h2 className="text-xl font-semibold mb-2">Description</h2>
       <p className="text-gray-700">{property.description}</p>
     </div>
+    <ReviewSection propertyId={property.id} />
   );
 }
