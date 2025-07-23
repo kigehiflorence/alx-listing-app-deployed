@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import { Property } from '@/types'; // Adjust if your types folder is somewhere else
+import { Property } from '@/types'; // works if the alias is correctly set
+import { ReviewSectionProps } from "@/components/property/ReviewSection"; // Adjust the import path as necessary
 import React from "react";
 export default function BookingForm() {
   const [formData, setFormData] = useState({
