@@ -17,10 +17,14 @@ const PropertyDetails = () => {
 
     const fetchProperty = async () => {
       try {
-        const response = await axios.get<Property>(
+        const response = await axios.get<Property[]>(
+  `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties`
+);
+setProperties(response.data); // assuming you have setProperties in your state
+        const propertyResponse = await axios.get<Property>(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
         );
-        setProperty(response.data);
+        setProperty(propertyResponse.data);
       } catch (error) {
         console.error("Failed to fetch property:", error);
       } finally {
