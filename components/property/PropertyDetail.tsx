@@ -1,5 +1,6 @@
 import React from "react";
-import { ReviewSection } from '@/components/property/ReviewSection';
+import ReviewSection from '@/components/property/ReviewSection';
+
 
 
 interface Property {
