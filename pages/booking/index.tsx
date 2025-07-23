@@ -1,9 +1,16 @@
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useState } from "react";
-import { Property } from '@/types'; // works if the alias is correctly set
-import { ReviewSectionProps } from "@/components/property/ReviewSection"; // Adjust the import path as necessary
+import { Property } from "@/types";
 import React from "react";
-export default function BookingForm() {
+
+export default function BookingPage() {
+  const router = useRouter();
+  const { propertyId } = router.query;
+
+  const [property, setProperty] = useState<Property | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,39 +22,35 @@ export default function BookingForm() {
     billingAddress: "",
   });
 
-  const [loading, setLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!propertyId) return;
+
+    const fetchProperty = async () => {
+      try {
+        const response = await axios.get<Property>(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
+        );
+        setProperty(response.data);
+      } catch (error) {
+        console.error("Failed to fetch property:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [propertyId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validateForm = () => {
-    const {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      cardNumber,
-      expirationDate,
-      cvv,
-      billingAddress,
-    } = formData;
-
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phoneNumber ||
-      !cardNumber ||
-      !expirationDate ||
-      !cvv ||
-      !billingAddress
-    ) {
-      return false;
-    }
-    return true;
+    return Object.values(formData).every((field) => field.trim() !== "");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,16 +63,13 @@ export default function BookingForm() {
       return;
     }
 
-    setLoading(true);
+    setFormLoading(true);
 
     try {
-     const response = await axios.get<Property>(
-  `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
-);
+      // Simulate submission or send booking data to backend here
+      console.log("Submitting booking for property:", propertyId);
+      console.log("Form data:", formData);
 
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch properties");
-      }
       setSuccess("Booking confirmed successfully!");
       setFormData({
         firstName: "",
@@ -85,13 +85,17 @@ export default function BookingForm() {
       setError("Failed to submit booking.");
       console.error("Booking error:", error);
     } finally {
-      setLoading(false);
+      setFormLoading(false);
     }
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (!property) return <p>Property not found.</p>;
+
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Booking Details</h1>
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">Booking for: {property.title}</h1>
+      <p className="mb-6">{property.description}</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -161,10 +165,10 @@ export default function BookingForm() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={formLoading}
           className="bg-blue-600 text-white p-2 rounded w-full"
         >
-          {loading ? "Processing..." : "Confirm & Pay"}
+          {formLoading ? "Processing..." : "Confirm & Pay"}
         </button>
 
         {error && <p className="text-red-500">{error}</p>}
