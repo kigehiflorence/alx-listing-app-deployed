@@ -9,7 +9,6 @@ interface Property {
   image: string;
   location: string;
   price: number;
-  title: string;
   description: string;
 }
 
