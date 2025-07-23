@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import PropertyDetail from "@/components/property/PropertyDetail";
+import { Property } from "@/types";
 
 interface Property {
   id: number;
@@ -15,26 +16,28 @@ interface Property {
 export default function PropertyDetailPage() {
   const router = useRouter();
   const { id } = router.query;
+  const propertyId = typeof id === "string" ? id : "";
+
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   interface Property {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  location: string;
-  // Add more fields depending on your actual API response
-}
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    location: string;
+    // Add more fields depending on your actual API response
+  }
 
   useEffect(() => {
     const fetchProperty = async () => {
-      if (!id) return;
+      if (!propertyId) return;
       try {
         const response = await axios.get<Property>(
-  `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
-);
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
+        );
 
         if (response.status !== 200) {
           throw new Error("Failed to fetch property details");
@@ -49,11 +52,10 @@ export default function PropertyDetailPage() {
     };
 
     fetchProperty();
-  }, [id]);
+  }, [propertyId]);
 
   if (loading) return <p className="text-center">Loading property details...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
   if (!property) return <p className="text-center">Property not found.</p>;
 
-  return <PropertyDetail property={property} />;
-}
+  return <PropertyDetail property={property}
