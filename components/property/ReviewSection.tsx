@@ -16,6 +16,7 @@ export interface Property {
   name: string;
   location: string;
   price: number;
+  title: string;
   description: string;
   // Add any other fields your API provides
 }

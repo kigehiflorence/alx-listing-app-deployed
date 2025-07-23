@@ -7,6 +7,8 @@ type Property = {
   location: string;
   price: number;
   image: string;
+  title: string;
+  description: string;
   // Add other expected fields here
 };
 
