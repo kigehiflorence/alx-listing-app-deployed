@@ -8,8 +8,16 @@ interface Review {
   rating: number;
 }
 
-interface ReviewSectionProps {
+export interface ReviewSectionProps {
   propertyId: number;
+}
+export interface Property {
+  id: number;
+  name: string;
+  location: string;
+  price: number;
+  description: string;
+  // Add any other fields your API provides
 }
 
 const ReviewSection = ({ propertyId }: ReviewSectionProps) => {
