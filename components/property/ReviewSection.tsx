@@ -16,7 +16,9 @@ const ReviewSection = ({ propertyId }: ReviewSectionProps) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+};
 
+export default ReviewSection;
   useEffect(() => {
     const fetchReviews = async () => {
       try {
