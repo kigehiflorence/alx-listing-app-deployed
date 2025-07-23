@@ -20,7 +20,9 @@ const ReviewSection = ({ propertyId }: ReviewSectionProps) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`https://api.example.com/properties/${propertyId}/reviews`);
+        const response = await axios.get<Review[]>(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}/reviews`
+        );
         setReviews(response.data);
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -33,17 +35,10 @@ const ReviewSection = ({ propertyId }: ReviewSectionProps) => {
     fetchReviews();
   }, [propertyId]);
 
-  if (loading) {
-    return <p className="text-center">Loading reviews...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
-  }
-
-  if (reviews.length === 0) {
+  if (loading) return <p className="text-center">Loading reviews...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (reviews.length === 0)
     return <p className="text-center text-gray-600">No reviews yet.</p>;
-  }
 
   return (
     <div className="space-y-4 mt-6">
@@ -57,6 +52,3 @@ const ReviewSection = ({ propertyId }: ReviewSectionProps) => {
       ))}
     </div>
   );
-};
-
-export default ReviewSection;

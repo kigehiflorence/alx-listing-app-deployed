@@ -61,7 +61,13 @@ export default function BookingForm() {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://api.example.com/bookings", formData);
+     const response = await axios.get<Property>(
+  `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
+);
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch properties");
+      }
       setSuccess("Booking confirmed successfully!");
       setFormData({
         firstName: "",

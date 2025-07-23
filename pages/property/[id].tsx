@@ -19,11 +19,26 @@ export default function PropertyDetailPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  interface Property {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  location: string;
+  // Add more fields depending on your actual API response
+}
+
   useEffect(() => {
     const fetchProperty = async () => {
       if (!id) return;
       try {
-        const response = await axios.get(`https://api.example.com/properties/${id}`);
+        const response = await axios.get<Property>(
+  `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
+);
+
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch property details");
+        }
         setProperty(response.data);
       } catch (error) {
         console.error("Error fetching property details:", error);
