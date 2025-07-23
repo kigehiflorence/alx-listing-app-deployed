@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-
+import { Property } from '@/types'; // Adjust if your types folder is somewhere else
+import React from "react";
 export default function BookingForm() {
   const [formData, setFormData] = useState({
     firstName: "",

@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-interface Property {
-  id: number;
-  title: string;
-  image: string;
+type Property = {
+  id: string;
+  name: string;
   location: string;
   price: number;
-}
+  image: string;
+  // Add other expected fields here
+};
 
+
+interface PropertyDetailProps {
+  propertyId: string;
+}
 export default function Home() {
   const [property, setProperty] = useState<Property | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
