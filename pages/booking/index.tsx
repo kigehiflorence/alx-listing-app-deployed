@@ -1,46 +1,33 @@
-// app/property-details/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import axios from "axios";
-import { Property } from "@/types"; // ✅ Adjust path if needed
+import { Property } from "@/types"; // Adjust path if needed
 
-const PropertyDetails = () => {
-  const searchParams = useSearchParams();
-  const propertyId = searchParams.get("id");
+export default function Home() {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!propertyId || Array.isArray(propertyId)) return;
+    const propertyId = "123"; // ✅ Make sure this line is above where it's used
 
     const fetchProperty = async () => {
       try {
-        const response = await axios.get<Property[]>(
-  `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties`
-);
-setProperties(response.data); // assuming you have setProperties in your state
-        const propertyResponse = await axios.get<Property>(
+        const response = await axios.get<Property>(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/properties/${propertyId}`
         );
-        setProperty(propertyResponse.data);
+        setProperty(response.data);
       } catch (error) {
-        console.error("Failed to fetch property:", error);
+        console.error("Error fetching property:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProperty();
-  }, [propertyId]);
-
-  if (!propertyId || Array.isArray(propertyId)) {
-    return <p>Invalid property ID</p>;
-  }
+  }, []);
 
   if (loading) return <p>Loading...</p>;
-
   if (!property) return <p>Property not found.</p>;
 
   return (
@@ -52,6 +39,4 @@ setProperties(response.data); // assuming you have setProperties in your state
       </p>
     </div>
   );
-};
-
-export default PropertyDetails;
+}
