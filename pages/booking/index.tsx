@@ -1,15 +1,27 @@
+// pages/index.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Property } from "@/types"; // Adjust path if needed
+import PropertyDetail from "@/components/property/PropertyDetail";
+
+// Define Property type here or import from your shared types
+interface Property {
+  id: number;
+  title: string;
+  image: string;
+  location: string;
+  price: number;
+  description: string;
+}
 
 export default function Home() {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const propertyId = "123"; // ✅ Make sure this line is above where it's used
+    const propertyId = "123"; // Replace with real ID or logic to get it dynamically
 
     const fetchProperty = async () => {
       try {
@@ -30,13 +42,5 @@ export default function Home() {
   if (loading) return <p>Loading...</p>;
   if (!property) return <p>Property not found.</p>;
 
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">{property.title}</h1>
-      <p className="text-gray-700 mb-2">{property.description}</p>
-      <p className="text-sm text-gray-500">
-        Location: {property.location} | Price: ${property.price}
-      </p>
-    </div>
-  );
+  return <PropertyDetail property={property} />;
 }
